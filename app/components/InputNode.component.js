@@ -3,10 +3,11 @@
 var InputNode = (function() {
     return {
         // CONTROL METHODS
-        create: function(parentId) {
+        create: function(parentId, lastWord) {
             var node = Object.create(this);
             this.parentEl = helpers.getById(parentId);
             this.uid = node.createId();
+            this.value = lastWord || '';
             // return this;
             this.update();
             return this;
@@ -20,7 +21,13 @@ var InputNode = (function() {
                     // pass value to Parent Component. pub/sub
                     events.publish('input-node-space', {
                         value: self.value
-                    })
+                    });
+                }
+                if ( e.keyCode === 8 && self.value.length < 1 ) {
+                    console.log( 'remove' );
+                    // remove last word in words array, wordNodes and insert into input field.
+                    // pass value to Parent Component. pub/sub
+                    events.publish('input-node-delete');
                 }
             });
         },
@@ -46,6 +53,7 @@ var InputNode = (function() {
         parentEl: undefined,
         uid: undefined,
         el: undefined,
+        value: '',
         // BUSINESS LOGIC
         createId: function() {
             return 'input-node-0.1';
@@ -53,6 +61,7 @@ var InputNode = (function() {
         buildElement: function(obj) {
             var el = document.createElement('input');
             el.id = obj.id;
+            el.value = this.value;
             this.el = el;
         }
 

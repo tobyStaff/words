@@ -12,15 +12,17 @@ var WordEditor = (function() {
         },
         watch: function() {
             var self = this;
-            // watch custom event for input space-up and corresponding value.
-            // then add new word to array, process and then re-build view.
-            var subs = events.subscribe('input-node-space', function(val) {
-                self.lastWord = val.value;
+            var inputNodeSpaceEvent = events.subscribe('input-node-space', function(val) {
+                self.currentValue = val.value;
+                self.update();
+            });
+            var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
                 self.update();
             });
         },
         update: function() {
-            this.addWord( this.lastWord );
+            this.addWord( this.currentValue );
+            // this.removeLastWord();
             this.render();
         },
         render: function() {
@@ -42,8 +44,8 @@ var WordEditor = (function() {
         // CONFIG
         id: undefined,
         element: undefined,
+        currentValue: '',
         words: [],
-        lastWord: '',
         inputNode: undefined,
         wordNodes: [],
         // LOGIC
@@ -51,6 +53,13 @@ var WordEditor = (function() {
             if ( word ) {
                 this.words.push( word );
             }
+        },
+        getLastWord: function() {
+            return this.words[ this.words.length-1 ];
+        },
+        removeLastWord: function() {
+            this.words.pop();
+            this.wordNodes.pop();
         },
         createWordNodes: function() {
             var self = this;
