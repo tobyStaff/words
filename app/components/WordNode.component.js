@@ -1,5 +1,5 @@
 'use strict';
-
+var helpers = require('../services/helpers.service.js');
 var WordNode = (function() {
 
     return {
@@ -43,3 +43,5 @@ var WordNode = (function() {
         }
     };
 })();
+
+module.exports = WordNode;

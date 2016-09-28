@@ -1,0 +1,23 @@
+{
+  "name": "words",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tobyStaff/words.git"
+  },
+  "author": "ts",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tobyStaff/words/issues"
+  },
+  "homepage": "https://github.com/tobyStaff/words#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "webpack": "^1.13.2"
+  }
+}

@@ -1,5 +1,9 @@
 'use strict';
 
+var helpers = require('../services/helpers.service.js');
+var InputNode = require('./InputNode.component.js');
+var WordNode = require('./WordNode.component.js');
+
 var WordEditor = (function() {
     return {
         // CONTROL METHODS
@@ -80,3 +84,5 @@ var WordEditor = (function() {
 
     }
 })();
+
+module.exports = WordEditor;

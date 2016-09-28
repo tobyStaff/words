@@ -1,5 +1,5 @@
 'use strict';
-
+var helpers = require('../services/helpers.service.js');
 var InputNode = (function() {
     return {
         // CONTROL METHODS
@@ -68,3 +68,5 @@ var InputNode = (function() {
     };
 
 })();
+
+module.exports = InputNode;
