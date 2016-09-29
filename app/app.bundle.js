@@ -73,15 +73,16 @@
 	            var self = this;
 	            var inputNodeSpaceEvent = events.subscribe('input-node-space', function(val) {
 	                self.currentValue = val.value;
+	                self.addWord( self.currentValue );
 	                self.update();
 	            });
 	            var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
+	                self.editableValue = self.words.pop() || '';
+	                self.removeLastWordNode();
 	                self.update();
 	            });
 	        },
 	        update: function() {
-	            this.addWord( this.currentValue );
-	            // this.removeLastWord();
 	            this.render();
 	        },
 	        render: function() {
@@ -93,10 +94,19 @@
 	            if ( this.inputNode !== undefined ) {
 	                this.inputNode.remove();
 	            }
+	            
 	            this.inputNode = InputNode.create(this.id);
+
+	            if ( this.editableValue !== '' ) {
+	                this.inputNode.el.value = this.editableValue;
+	            }
+
+	            console.log( this.words );
+	            console.log( this.wordNodes );
 	        },
 	        emptyCanvas: function() {
-	            while ( this.element.firstChild) {
+	            this.wordNodes = [];
+	            while ( this.element.firstChild ) {
 	                this.element.removeChild( this.element.firstChild );
 	            }
 	        },
@@ -104,6 +114,7 @@
 	        id: undefined,
 	        element: undefined,
 	        currentValue: '',
+	        editableValue: '',
 	        words: [],
 	        inputNode: undefined,
 	        wordNodes: [],
@@ -116,25 +127,30 @@
 	        getLastWord: function() {
 	            return this.words[ this.words.length-1 ];
 	        },
-	        removeLastWord: function() {
-	            this.words.pop();
-	            this.wordNodes.pop();
-	        },
 	        createWordNodes: function() {
-	            var self = this;
-	            helpers.forEach( this.words, function( v ) {
+	            var self = this,
+	                obj = {};
+	            helpers.forEach( self.words, function( v ) {
 	                // Component to be implemented before below works.
 	                if ( v ) {
-	                    self.wordNodes.push( WordNode.create( self.id, v ) );
+	                    obj = WordNode.create( self.id, v );
+	                    self.wordNodes.push( obj );
 	                }
 	            });
 	        },
-	        removeWordNodes: function() {
+	        removeAllWordNodes: function() {
 	            helpers.forEach( this.wordNodes, function( v ) {
 	                if ( v.hasOwnProperty('remove') ) {
 	                    v.remove();
 	                }
 	            });
+	        },
+	        removeLastWordNode: function() {
+	            var leng = this.wordNodes.length;
+	            if ( leng > 1 ) {
+	                this.wordNodes[ leng - 1 ].remove();
+	                return this.wordNodes.pop();
+	            }
 	        }
 
 	    }
@@ -177,6 +193,11 @@
 	var helpers = __webpack_require__(2);
 	var InputNode = (function() {
 	    return {
+	        // CONFIG
+	        parentEl: undefined,
+	        uid: undefined,
+	        el: undefined,
+	        value: '',
 	        // CONTROL METHODS
 	        create: function(parentId, lastWord) {
 	            var node = Object.create(this);
@@ -188,7 +209,6 @@
 	            return this;
 	        },
 	        watch: function() {
-
 	            this.el.addEventListener('keyup', function(e) {
 	                // console.log( e.keyCode );
 	                var self = this;
@@ -198,8 +218,10 @@
 	                        value: self.value
 	                    });
 	                }
+	            });
+	            this.el.addEventListener('keydown', function(e) {
+	                var self = this;
 	                if ( e.keyCode === 8 && self.value.length < 1 ) {
-	                    console.log( 'remove' );
 	                    // remove last word in words array, wordNodes and insert into input field.
 	                    // pass value to Parent Component. pub/sub
 	                    events.publish('input-node-delete');
@@ -224,11 +246,6 @@
 	            // this.parentEl.removeChild( this.el );
 	            delete this;
 	        },
-	        // CONFIG
-	        parentEl: undefined,
-	        uid: undefined,
-	        el: undefined,
-	        value: '',
 	        // BUSINESS LOGIC
 	        createId: function() {
 	            return 'input-node-0.1';
@@ -259,11 +276,11 @@
 	        // CONTROL METHODS
 	        create: function(parentId, word) {
 	            var node = Object.create(this);
-	            this.parentEl = helpers.getById(parentId);
-	            this.uid = node.createId();
-	            this.text = word;
-	            this.update();
-	            return this;
+	            node.parentEl = helpers.getById(parentId);
+	            node.text = word;
+	            node.uid = node.createId();
+	            node.update();
+	            return node;
 	        },
 	        watch: function() {
 
@@ -286,7 +303,8 @@
 	        text: '',
 	        // BUSINESS LOGIC
 	        createId: function() {
-	            return 'word-node-0.1';
+	            var txt = this.text.split(" ")[0];
+	            return 'word-node-'+txt;
 	        },
 	        buildElement: function(obj, text) {
 	            var el = document.createElement('span');

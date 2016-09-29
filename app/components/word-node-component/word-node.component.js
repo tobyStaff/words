@@ -6,11 +6,11 @@ var WordNode = (function() {
         // CONTROL METHODS
         create: function(parentId, word) {
             var node = Object.create(this);
-            this.parentEl = helpers.getById(parentId);
-            this.uid = node.createId();
-            this.text = word;
-            this.update();
-            return this;
+            node.parentEl = helpers.getById(parentId);
+            node.text = word;
+            node.uid = node.createId();
+            node.update();
+            return node;
         },
         watch: function() {
 
@@ -33,7 +33,8 @@ var WordNode = (function() {
         text: '',
         // BUSINESS LOGIC
         createId: function() {
-            return 'word-node-0.1';
+            var txt = this.text.split(" ")[0];
+            return 'word-node-'+txt;
         },
         buildElement: function(obj, text) {
             var el = document.createElement('span');

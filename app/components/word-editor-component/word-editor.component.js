@@ -18,15 +18,16 @@ var WordEditor = (function() {
             var self = this;
             var inputNodeSpaceEvent = events.subscribe('input-node-space', function(val) {
                 self.currentValue = val.value;
+                self.addWord( self.currentValue );
                 self.update();
             });
             var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
+                self.editableValue = self.words.pop() || '';
+                self.removeLastWordNode();
                 self.update();
             });
         },
         update: function() {
-            this.addWord( this.currentValue );
-            // this.removeLastWord();
             this.render();
         },
         render: function() {
@@ -38,10 +39,19 @@ var WordEditor = (function() {
             if ( this.inputNode !== undefined ) {
                 this.inputNode.remove();
             }
+            
             this.inputNode = InputNode.create(this.id);
+
+            if ( this.editableValue !== '' ) {
+                this.inputNode.el.value = this.editableValue;
+            }
+
+            console.log( this.words );
+            console.log( this.wordNodes );
         },
         emptyCanvas: function() {
-            while ( this.element.firstChild) {
+            this.wordNodes = [];
+            while ( this.element.firstChild ) {
                 this.element.removeChild( this.element.firstChild );
             }
         },
@@ -49,6 +59,7 @@ var WordEditor = (function() {
         id: undefined,
         element: undefined,
         currentValue: '',
+        editableValue: '',
         words: [],
         inputNode: undefined,
         wordNodes: [],
@@ -61,25 +72,30 @@ var WordEditor = (function() {
         getLastWord: function() {
             return this.words[ this.words.length-1 ];
         },
-        removeLastWord: function() {
-            this.words.pop();
-            this.wordNodes.pop();
-        },
         createWordNodes: function() {
-            var self = this;
-            helpers.forEach( this.words, function( v ) {
+            var self = this,
+                obj = {};
+            helpers.forEach( self.words, function( v ) {
                 // Component to be implemented before below works.
                 if ( v ) {
-                    self.wordNodes.push( WordNode.create( self.id, v ) );
+                    obj = WordNode.create( self.id, v );
+                    self.wordNodes.push( obj );
                 }
             });
         },
-        removeWordNodes: function() {
+        removeAllWordNodes: function() {
             helpers.forEach( this.wordNodes, function( v ) {
                 if ( v.hasOwnProperty('remove') ) {
                     v.remove();
                 }
             });
+        },
+        removeLastWordNode: function() {
+            var leng = this.wordNodes.length;
+            if ( leng > 1 ) {
+                this.wordNodes[ leng - 1 ].remove();
+                return this.wordNodes.pop();
+            }
         }
 
     }

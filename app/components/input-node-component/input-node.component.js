@@ -2,6 +2,11 @@
 var helpers = require('../services/helpers.service.js');
 var InputNode = (function() {
     return {
+        // CONFIG
+        parentEl: undefined,
+        uid: undefined,
+        el: undefined,
+        value: '',
         // CONTROL METHODS
         create: function(parentId, lastWord) {
             var node = Object.create(this);
@@ -13,7 +18,6 @@ var InputNode = (function() {
             return this;
         },
         watch: function() {
-
             this.el.addEventListener('keyup', function(e) {
                 // console.log( e.keyCode );
                 var self = this;
@@ -23,8 +27,10 @@ var InputNode = (function() {
                         value: self.value
                     });
                 }
+            });
+            this.el.addEventListener('keydown', function(e) {
+                var self = this;
                 if ( e.keyCode === 8 && self.value.length < 1 ) {
-                    console.log( 'remove' );
                     // remove last word in words array, wordNodes and insert into input field.
                     // pass value to Parent Component. pub/sub
                     events.publish('input-node-delete');
@@ -49,11 +55,6 @@ var InputNode = (function() {
             // this.parentEl.removeChild( this.el );
             delete this;
         },
-        // CONFIG
-        parentEl: undefined,
-        uid: undefined,
-        el: undefined,
-        value: '',
         // BUSINESS LOGIC
         createId: function() {
             return 'input-node-0.1';
