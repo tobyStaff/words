@@ -25,6 +25,7 @@ var WordEditor = (function() {
             });
             var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
                 self.editableValue = self.words.pop() || '';
+                self.lastWordNodeWidth =  self.wordNodes.pop().elWidth || 0;
                 self.removeLastWordNode();
                 self.update();
                 helpers.log( 'delete' );
@@ -43,7 +44,7 @@ var WordEditor = (function() {
                 this.inputNode.remove();
             }
             
-            this.inputNode = InputNode.create(this.id);
+            this.inputNode = InputNode.create(this.id, null, this.lastWordNodeWidth );
 
             if ( this.editableValue !== '' ) {
                 this.inputNode.el.value = this.editableValue;
@@ -62,6 +63,7 @@ var WordEditor = (function() {
         element: undefined,
         currentValue: '',
         editableValue: '',
+        lastWordNode: 0,
         words: [],
         inputNode: undefined,
         wordNodes: [],
@@ -94,9 +96,8 @@ var WordEditor = (function() {
         },
         removeLastWordNode: function() {
             var leng = this.wordNodes.length;
-            if ( leng > 1 ) {
+            if ( leng > 0 ) {
                 this.wordNodes[ leng - 1 ].remove();
-                return this.wordNodes.pop();
             }
         }
 

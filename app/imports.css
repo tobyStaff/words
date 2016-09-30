@@ -29,12 +29,14 @@
   font-family: "adelle", serif;
   outline: none;
   border: none;
-  padding: 0; }
+  padding: 0;
+  width: 100px; }
 
 .editor__input:focus {
   border: none;
   outline: none;
-  padding: 0; }
+  padding: 0;
+  border-bottom: 2px solid orange; }
 
 .editor__word {
   font-size: 27px;

@@ -3,6 +3,12 @@ var helpers = require('../../../services/helpers.service.js');
 var WordNode = (function() {
 
     return {
+        // CONFIG
+        parentEl: undefined,
+        uid: undefined,
+        el: undefined,
+        elWidth: 0,
+        text: '', 
         // CONTROL METHODS
         create: function(parentId, word) {
             var node = Object.create(this);
@@ -20,17 +26,12 @@ var WordNode = (function() {
             this.render();
         },
         render: function() {
-            this.parentEl.appendChild( this.el );
+            this.elWidth = this.parentEl.appendChild( this.el ).offsetWidth;
         },
         remove: function() {
             this.parentEl.removeChild( this.el );
             delete this;
         },
-        // CONFIG
-        parentEl: undefined,
-        uid: undefined,
-        el: undefined,
-        text: '',
         // BUSINESS LOGIC
         createId: function() {
             var txt = this.text.split(" ")[0];

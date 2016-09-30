@@ -16,13 +16,13 @@ $editor-font: $adelle;
 	border: none;
 	padding: 0;
 	// border-bottom: 2px solid transparent;
-	// min-width: 50px;
+	width: 100px;
 }
 .editor__input:focus {
 	border: none;
 	outline: none;
 	padding: 0;
-	// border-bottom: 2px solid orange;
+	border-bottom: 2px solid orange;
 }
 .editor__word {
 	font-size: $editor-fontsize;

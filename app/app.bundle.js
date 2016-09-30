@@ -80,6 +80,7 @@
 	            });
 	            var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
 	                self.editableValue = self.words.pop() || '';
+	                self.lastWordNodeWidth =  self.wordNodes.pop().elWidth || 0;
 	                self.removeLastWordNode();
 	                self.update();
 	                helpers.log( 'delete' );
@@ -98,7 +99,7 @@
 	                this.inputNode.remove();
 	            }
 	            
-	            this.inputNode = InputNode.create(this.id);
+	            this.inputNode = InputNode.create(this.id, null, this.lastWordNodeWidth );
 
 	            if ( this.editableValue !== '' ) {
 	                this.inputNode.el.value = this.editableValue;
@@ -117,6 +118,7 @@
 	        element: undefined,
 	        currentValue: '',
 	        editableValue: '',
+	        lastWordNode: 0,
 	        words: [],
 	        inputNode: undefined,
 	        wordNodes: [],
@@ -149,9 +151,8 @@
 	        },
 	        removeLastWordNode: function() {
 	            var leng = this.wordNodes.length;
-	            if ( leng > 1 ) {
+	            if ( leng > 0 ) {
 	                this.wordNodes[ leng - 1 ].remove();
-	                return this.wordNodes.pop();
 	            }
 	        }
 
@@ -205,12 +206,14 @@
 	        uid: undefined,
 	        el: undefined,
 	        value: '',
+	        width: 100,
 	        // CONTROL METHODS
-	        create: function(parentId, value) {
+	        create: function(parentId, value, width) {
 	            var node = Object.create(this);
 	            this.parentEl = helpers.getById(parentId);
 	            this.uid = node.createId();
 	            this.value = this.filter( value ) || '';
+	            this.width = width || 100;
 	            // return this;
 	            this.update();
 	            return this;
@@ -262,6 +265,8 @@
 	            el.id = obj.id;
 	            el.className += 'editor__input ';
 	            el.value = this.value;
+	            el.style.width = ( this.width + 2 )+'px';
+	            helpers.log( el.style );
 	            this.el = el;
 	        },
 	        filter: function( value ) {
@@ -287,6 +292,12 @@
 	var WordNode = (function() {
 
 	    return {
+	        // CONFIG
+	        parentEl: undefined,
+	        uid: undefined,
+	        el: undefined,
+	        elWidth: 0,
+	        text: '', 
 	        // CONTROL METHODS
 	        create: function(parentId, word) {
 	            var node = Object.create(this);
@@ -304,17 +315,12 @@
 	            this.render();
 	        },
 	        render: function() {
-	            this.parentEl.appendChild( this.el );
+	            this.elWidth = this.parentEl.appendChild( this.el ).offsetWidth;
 	        },
 	        remove: function() {
 	            this.parentEl.removeChild( this.el );
 	            delete this;
 	        },
-	        // CONFIG
-	        parentEl: undefined,
-	        uid: undefined,
-	        el: undefined,
-	        text: '',
 	        // BUSINESS LOGIC
 	        createId: function() {
 	            var txt = this.text.split(" ")[0];

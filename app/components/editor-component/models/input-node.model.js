@@ -7,12 +7,14 @@ var InputNode = (function() {
         uid: undefined,
         el: undefined,
         value: '',
+        width: 100,
         // CONTROL METHODS
-        create: function(parentId, value) {
+        create: function(parentId, value, width) {
             var node = Object.create(this);
             this.parentEl = helpers.getById(parentId);
             this.uid = node.createId();
             this.value = this.filter( value ) || '';
+            this.width = width || 100;
             // return this;
             this.update();
             return this;
@@ -64,6 +66,8 @@ var InputNode = (function() {
             el.id = obj.id;
             el.className += 'editor__input ';
             el.value = this.value;
+            el.style.width = ( this.width + 2 )+'px';
+            helpers.log( el.style );
             this.el = el;
         },
         filter: function( value ) {
