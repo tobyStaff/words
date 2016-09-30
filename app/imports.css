@@ -1,0 +1,41 @@
+.black {
+  color: #363636 !important; }
+
+.green {
+  color: #74CEB7 !important; }
+
+.sea {
+  color: #2C858D !important; }
+
+.blue {
+  color: #004056 !important; }
+
+.h1 {
+  font-family: "acier-bat-gris", sans-serif;
+  font-size: 40px;
+  font-weight: 400;
+  text-align: center; }
+
+.editor {
+  color: #363636;
+  width: 600px;
+  margin: 0 auto;
+  font-size: 27px;
+  font-family: "adelle", serif; }
+
+.editor__input {
+  color: #2C858D;
+  font-size: 27px;
+  font-family: "adelle", serif;
+  outline: none;
+  border: none;
+  padding: 0; }
+
+.editor__input:focus {
+  border: none;
+  outline: none;
+  padding: 0; }
+
+.editor__word {
+  font-size: 27px;
+  font-family: "adelle", serif; }

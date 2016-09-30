@@ -13,6 +13,11 @@ var helpers = (function() {
         	for ( i; i < l; i++ ) {
         		cb( array[ i ], i );
         	}
+        },
+        log: function() {
+            this.forEach( arguments, function( v ) {
+                console.log( v );
+            });
         }
     }
     

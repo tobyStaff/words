@@ -73,13 +73,16 @@
 	            var self = this;
 	            var inputNodeSpaceEvent = events.subscribe('input-node-space', function(val) {
 	                self.currentValue = val.value;
+	                self.editableValue = '';
 	                self.addWord( self.currentValue );
 	                self.update();
+	                helpers.log( 'space' );
 	            });
 	            var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
 	                self.editableValue = self.words.pop() || '';
 	                self.removeLastWordNode();
 	                self.update();
+	                helpers.log( 'delete' );
 	            });
 	        },
 	        update: function() {
@@ -101,8 +104,7 @@
 	                this.inputNode.el.value = this.editableValue;
 	            }
 
-	            console.log( this.words );
-	            console.log( this.wordNodes );
+	            helpers.log( this.editableValue, this.words, this.wordNodes );
 	        },
 	        emptyCanvas: function() {
 	            this.wordNodes = [];
@@ -178,6 +180,11 @@
 	        	for ( i; i < l; i++ ) {
 	        		cb( array[ i ], i );
 	        	}
+	        },
+	        log: function() {
+	            this.forEach( arguments, function( v ) {
+	                console.log( v );
+	            });
 	        }
 	    }
 	    
@@ -199,23 +206,23 @@
 	        el: undefined,
 	        value: '',
 	        // CONTROL METHODS
-	        create: function(parentId, lastWord) {
+	        create: function(parentId, value) {
 	            var node = Object.create(this);
 	            this.parentEl = helpers.getById(parentId);
 	            this.uid = node.createId();
-	            this.value = lastWord || '';
+	            this.value = this.filter( value ) || '';
 	            // return this;
 	            this.update();
 	            return this;
 	        },
 	        watch: function() {
+	            var obj = this;
 	            this.el.addEventListener('keyup', function(e) {
-	                // console.log( e.keyCode );
 	                var self = this;
 	                if (e.keyCode === 32) {
 	                    // pass value to Parent Component. pub/sub
 	                    events.publish('input-node-space', {
-	                        value: self.value
+	                        value: obj.filter( self.value )
 	                    });
 	                }
 	            });
@@ -253,8 +260,15 @@
 	        buildElement: function(obj) {
 	            var el = document.createElement('input');
 	            el.id = obj.id;
+	            el.className += 'editor__input ';
 	            el.value = this.value;
 	            this.el = el;
+	        },
+	        filter: function( value ) {
+	            if ( value === " " ) {
+	                return false;
+	            }
+	            return value;
 	        }
 
 	    };
@@ -309,6 +323,7 @@
 	        buildElement: function(obj, text) {
 	            var el = document.createElement('span');
 	            el.id = obj.id;
+	            el.className += 'editor__word ';
 	            el.innerHTML = text;
 	            this.el = el;
 	        }

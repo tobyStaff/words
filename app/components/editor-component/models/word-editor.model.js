@@ -1,8 +1,8 @@
 'use strict';
 
-var helpers = require('../services/helpers.service.js');
-var InputNode = require('./InputNode.component.js');
-var WordNode = require('./WordNode.component.js');
+var helpers = require('../../../services/helpers.service.js');
+var InputNode = require('./input-node.model.js');
+var WordNode = require('./word-node.model.js');
 
 var WordEditor = (function() {
     return {
@@ -18,13 +18,16 @@ var WordEditor = (function() {
             var self = this;
             var inputNodeSpaceEvent = events.subscribe('input-node-space', function(val) {
                 self.currentValue = val.value;
+                self.editableValue = '';
                 self.addWord( self.currentValue );
                 self.update();
+                helpers.log( 'space' );
             });
             var inputNodeDeleteEvent = events.subscribe('input-node-delete', function() {
                 self.editableValue = self.words.pop() || '';
                 self.removeLastWordNode();
                 self.update();
+                helpers.log( 'delete' );
             });
         },
         update: function() {
@@ -46,8 +49,7 @@ var WordEditor = (function() {
                 this.inputNode.el.value = this.editableValue;
             }
 
-            console.log( this.words );
-            console.log( this.wordNodes );
+            helpers.log( this.editableValue, this.words, this.wordNodes );
         },
         emptyCanvas: function() {
             this.wordNodes = [];

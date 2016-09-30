@@ -1,5 +1,5 @@
 'use strict';
-var helpers = require('../services/helpers.service.js');
+var helpers = require('../../../services/helpers.service.js');
 var WordNode = (function() {
 
     return {
@@ -39,6 +39,7 @@ var WordNode = (function() {
         buildElement: function(obj, text) {
             var el = document.createElement('span');
             el.id = obj.id;
+            el.className += 'editor__word ';
             el.innerHTML = text;
             this.el = el;
         }

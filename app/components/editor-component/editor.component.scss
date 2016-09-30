@@ -1,0 +1,30 @@
+$editor-fontsize: 27px;
+$editor-font: $adelle;
+
+.editor {
+	color: $black;
+	width: 600px;
+	margin: 0 auto;
+	font-size: $editor-fontsize;
+	font-family: $editor-font;
+}
+.editor__input {
+	color: $sea;
+	font-size: $editor-fontsize;
+	font-family: $editor-font;
+	outline: none;
+	border: none;
+	padding: 0;
+	// border-bottom: 2px solid transparent;
+	// min-width: 50px;
+}
+.editor__input:focus {
+	border: none;
+	outline: none;
+	padding: 0;
+	// border-bottom: 2px solid orange;
+}
+.editor__word {
+	font-size: $editor-fontsize;
+	font-family: $editor-font;
+}

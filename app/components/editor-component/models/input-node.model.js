@@ -1,5 +1,5 @@
 'use strict';
-var helpers = require('../services/helpers.service.js');
+var helpers = require('../../../services/helpers.service.js');
 var InputNode = (function() {
     return {
         // CONFIG
@@ -8,23 +8,23 @@ var InputNode = (function() {
         el: undefined,
         value: '',
         // CONTROL METHODS
-        create: function(parentId, lastWord) {
+        create: function(parentId, value) {
             var node = Object.create(this);
             this.parentEl = helpers.getById(parentId);
             this.uid = node.createId();
-            this.value = lastWord || '';
+            this.value = this.filter( value ) || '';
             // return this;
             this.update();
             return this;
         },
         watch: function() {
+            var obj = this;
             this.el.addEventListener('keyup', function(e) {
-                // console.log( e.keyCode );
                 var self = this;
                 if (e.keyCode === 32) {
                     // pass value to Parent Component. pub/sub
                     events.publish('input-node-space', {
-                        value: self.value
+                        value: obj.filter( self.value )
                     });
                 }
             });
@@ -62,8 +62,15 @@ var InputNode = (function() {
         buildElement: function(obj) {
             var el = document.createElement('input');
             el.id = obj.id;
+            el.className += 'editor__input ';
             el.value = this.value;
             this.el = el;
+        },
+        filter: function( value ) {
+            if ( value === " " ) {
+                return false;
+            }
+            return value;
         }
 
     };
